@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Login</title>
+    <title>User Registration</title>
 </head>
 <body>
     {% extends 'layout-forms.html' %}
 
-    {% block login_form_block_reference %}
-		<h1>Login</h1>
+    {% block registration_form_block_reference %}
+		<h1>Register</h1>
 		{% if error %}
 			<p><strong>Error:</strong> {{ error }}
 		{% endif %}
 		<div class="container">
 			<!-- Use this to see what the form will get. <form method="get"> -->
-			<form action="{{ url_for('login') }}" method="post" enctype="application/x-www-form-urlencoded">
+			<form action="{{ url_for('register') }}" method="post" enctype="application/x-www-form-urlencoded">
 				<div>
 					<label for="username">Username</label>
 					<input type="text" name="username" required>
@@ -24,13 +24,17 @@
 					<input type="password" name="password" required>
 				</div>
 				<div>
-					<input type="submit" class="submit" value="Log In">
+					<label for="verify_password">Verify Password</label>
+					<input type="password" name="verify_password" required>
+				</div>
+				<div>
+					<input type="submit" class="submit" value="Register">
 				</div>
 			</form>
 		</div>
 
 		<div>
-			<h2><a href="{{ url_for('register') }}">New User Registration</a></h2>
+			<h2><a href="{{ url_for('login') }}">Log In</a></h2>
 		</div>
 
 		<div>

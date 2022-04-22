@@ -13,11 +13,23 @@
     <meta name="description" content={{description}}>
 </head>
 <body>
-    <!-- Create condition block when the user is logging in vs register. -->
 
-{#    {% block registration_form_block_reference %}{% endblock %}#}
-{#    {% block login_form_block_reference %}{% endblock %}#}
-{#    {% block change_password_form_block_reference %}{% endblock %}#}
+	<!-- Display any messages and errors passed in. -->
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<p>{{ message }}</p>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	{% if error %}
+		<p>Error: {{ error }}</p>
+	{% endif %}
+
+    <!-- Create condition block when the user is logging in vs register. -->
+	{% block registration_form_block_reference %}{% endblock %}
+	{% block login_form_block_reference %}{% endblock %}
+	{#    {% block change_password_form_block_reference %}{% endblock %}	#}
 
 </body>
 </html>

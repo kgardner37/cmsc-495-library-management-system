@@ -18,6 +18,18 @@
     <!-- All pages will have a header with links to navigate between pages.  -->
     {% include 'navigation.html' %}
 
+	<!-- Display any messages and errors passed in. -->
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<p>{{ message }}</p>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+	{% if error %}
+		<p>Error: {{ error }}</p>
+	{% endif %}
+
     <!-- Each jinja block will inherit this layout and show it's own content.  -->
 	
 </body>
