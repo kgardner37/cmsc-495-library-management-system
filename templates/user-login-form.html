@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+</head>
+<body>
+    {% extends 'layout-forms.html' %}
+
+    {% block login_form_block_reference %}
+        <h1>Login</h1>
+        {% if error %}
+            <p><strong>Error:</strong> {{ error }}
+        {% endif %}
+        <div class="container">
+            <!-- Use this to see what the form will get. <form method="get"> -->
+            <form action="{{ url_for('login_user') }}" method="post" enctype="application/x-www-form-urlencoded">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" name="username" required>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div>
+                    <input type="submit" class="submit" value="Log In">
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <h2><a href="{{ url_for('register_user') }}">New User Registration</a></h2>
+        </div>
+
+        <div>
+            <p>UserName: KevinG</p>
+            <p>Password: asDf123####asdf234</p>
+        </div>
+    {% endblock %}
+</body>
+</html>

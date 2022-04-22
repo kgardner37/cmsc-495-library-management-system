@@ -1,0 +1,32 @@
+CREATE TABLE Users (
+    UserId INTEGER PRIMARY KEY,
+    Name TEXT NOT NULL UNIQUE,
+    Password TEXT NOT NULL,
+    IsAdmin INTEGER NOT NULL
+);
+
+CREATE TABLE Books (
+    BookId INTEGER PRIMARY KEY,
+    Title TEXT NOT NULL,
+    Author TEXT NOT NULL
+);
+
+CREATE TABLE BookTransactions (
+    TransactionId INTEGER PRIMARY KEY,
+    Type TEXT NOT NULL,
+    Date TEXT NOT NULL,
+    BookId INTEGER NOT NULL
+        REFERENCES Books (BookId),
+    UserId INTEGER NOT NULL,
+    FOREIGN KEY (UserId)
+        REFERENCES Users (UserId)
+);
+
+CREATE TABLE FinePayments (
+    FineId INTEGER PRIMARY KEY,
+    TransactionId INTEGER NOT NULL,
+    FinePaid REAL NOT NULL,
+    FOREIGN KEY (TransactionId)
+        REFERENCES BookTransactions (TransactionId)
+);
+
