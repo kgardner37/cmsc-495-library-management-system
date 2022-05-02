@@ -7,12 +7,34 @@
 </head>
 
 <body>
-    {% extends 'layout.html' %}
-
     {% block home_block_reference %}
         <div class="container">
             <h1>{{ title }}</h1>
             <p>Paragraph</p>
+        </div>
+
+        <div class="books">
+            <h2>Books</h2>
+            {% for book in books %}
+            <div class="book">
+                <div class="book-title">
+                    <h4>{{ book.title }}</h4>
+                </div>
+                <div class="book-info">
+                    <p class="book-image"></p>
+                    <p class="book-author">{{ book.author }}</p>
+                    <p class="book-summary">{{ book.summary }}</p>
+                </div>
+                <div class="book-actions">
+                    {% if book in current_user.books %}
+                        <a href={{url_for('checkIn', id=book.id)}}>Check In</a>
+                        <a href={{url_for('renew', id=book.id)}}>Renew</a>
+                    {% else %}
+                        <a href={{url_for('checkOut', id=book.id)}}>Check Out</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
         </div>
 
         <!-- section for HTML information.  -->

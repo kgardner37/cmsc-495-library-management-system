@@ -1,9 +1,14 @@
 <header>
-   <nav class="topnav">
+  <nav class="topnav">
     <a href="{{ url_for('load_home') }}">Home</a>
-	<a href="{{ url_for('login') }}">Log In</a>
-	<a href="{{ url_for('register') }}">Register</a>
-	<a href="{{ url_for('logout') }}">Log Out</a>
+    {% if current_user.isAdmin %}
+      <a href="{{ url_for('admin.index') }}">Administration</a>
+    {% endif %}
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('logout') }}">Log Out</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Log In</a>
+      <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
   </nav>
 </header>
-

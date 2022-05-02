@@ -2,34 +2,14 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, current_user, login_user, UserMixin, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from __main__ import app, db
-
-# flask_login initialization
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
-
-# User sqlalchemy model
-class User(UserMixin, db.Model):
-	__tablename__ = 'user'
-	id = db.Column(db.Integer, primary_key=True)
-	username = db.Column(db.String)
-	password = db.Column(db.String)
-	isAdmin = db.Column(db.Boolean)
-
-	def __init__(self, *args, **kwargs):
-		super(User, self).__init__(*args, **kwargs)
-
-	def __repr__(self):
-		return f'<User id: {self.id}, username: {self.username}, admin: {self.isAdmin}>'
-
-	def check_password(self, password):
-		return self.password == password
+from __main__ import app, db, login_manager
+import sqliteDatabase.BookRepositoryService.BookRepositoryService as brs
+import sqliteDatabase.Models.Models as models
 
 @login_manager.user_loader
 def load_user(user_id):
 	''' Standard method used by libraries to load a user by id. '''
-	return User.query.get(int(user_id))
+	return models.User.query.get(int(user_id))
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -48,7 +28,7 @@ def register():
 		if password != verify:
 			error = 'Mismatching passwords.'
 		else:
-			user = User(username=username, password=password)
+			user = models.User(username=username, password=password, isAdmin=True)
 			db.session.add(user)
 			db.session.commit()
 			
@@ -56,12 +36,12 @@ def register():
 			flash('Registration successful.')
 			return redirect(url_for('load_home'))
 			
-		return render_template('user-register-form.html', error=error)
+		return render_template('layout.html', template='user-register-form.html', title='Register', error=error)
 		
 	else:
 		if current_user.is_authenticated:
 			return redirect(url_for('load_home'))
-		return render_template('user-register-form.html')
+		return render_template('layout.html', template='user-register-form.html', title='Register')
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -73,7 +53,7 @@ def login():
 	
 		error = None
 		username = request.form.get('username')
-		user = User.query.filter_by(username=username).first()
+		user = models.User.query.filter_by(username=username).first()
 		
 		if user is None or not user.check_password(request.form.get('password')):
 			error = 'Invalid credentials.'
@@ -81,11 +61,11 @@ def login():
 			login_user(user)
 			flash('Login successful.')
 			return redirect(url_for('load_home'))
-		return render_template('user-registration-form.html', error=error)
+		return render_template('layout.html', template='user-login-form.html', title='Log In', error=error)
 	else:
 		if current_user.is_authenticated:
 			return redirect(url_for('load_home'))
-	return render_template('user-login-form.html')
+	return render_template('layout.html', template='user-login-form.html', title='Log In')
 
 @app.route('/logout/', methods=['GET', 'POST'])
 @login_required
