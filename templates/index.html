@@ -27,49 +27,18 @@
                 </div>
                 <div class="book-actions">
                     {% if book in current_user.books %}
-                        <a href={{url_for('checkIn', id=book.id)}}>Check In</a>
-                        <a href={{url_for('renew', id=book.id)}}>Renew</a>
+                        {% if book.isOverDue == 0 %}
+                            <a href={{url_for('payFine', id=book.id)}}>Pay Fine</a>
+                        {% else %}
+                            <a href={{url_for('checkIn', id=book.id)}}>Check In</a>
+                            <a href={{url_for('renew', id=book.id)}}>Renew</a>
+                        {% endif %}
                     {% else %}
                         <a href={{url_for('checkOut', id=book.id)}}>Check Out</a>
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
-        </div>
-
-        <!-- section for HTML information.  -->
-        <div>
-
-            <h1> Working Tips</h1>
-            <ol>
-                <li><h2>Clear Browser Cache</h2>
-                    <p>HTML will probably update when changes have been made to an HTML document but
-                    CSS changes will likely be cached. This can be frustrating to resolve because
-                    it seems like the updates are incorrect when the page is refreshed and CSS
-                    changes are not displaying. This also happens when updating the routes.</p>
-                </li>
-                <li>
-                    <h2>Make an Outline</h2>
-                    <p>It is easier to separate the development process into compartmental efforts.
-                    Creating page content, deciding page layout, and creating code for the web
-                    server to run should be focused on independently.</p>
-                </li>
-                <li>
-                    <h2>Source Control</h2>
-                    <p>The other labs were easy to create code backups while working by simply making
-                    a copy of the .py script and changing the name. Since the flask environment relies
-                    on a specific file structure, it's important to save all the objects that have
-                    been changed as well as any changes to the directory structure. Maybe setting up a
-                    github project is the way to go; I have just been making a copy of the entire folder
-                    so far.</p>
-                </li>
-                <li>
-                    <h2>Practice Examples</h2>
-                    <p>It's best to do each of the walk through examples for a concept, like the template
-                     blocks, separately and save those off for reference in another project rather than
-                     trying to start a lab and incorporate the new technique at the same time. </p>
-                </li>
-            </ol>
         </div>
     {% endblock %}
 </body>

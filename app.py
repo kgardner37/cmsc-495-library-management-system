@@ -4,7 +4,6 @@ from flask_login import LoginManager, current_user, login_user, UserMixin, logou
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
-from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'secret'
@@ -22,15 +21,11 @@ login_manager.login_view = 'login'
 import sqliteDatabase.UserHandler.UserHandler as uh
 import sqliteDatabase.BookRepositoryService.BookRepositoryService as brs
 import sqliteDatabase.Models.Models as models
+import sqliteDatabase.AccountingService.AccountingService as ac
 
 @app.route('/')
 def index():
 	return redirect(url_for('load_home'))
-	# ''' This will route the user to the home page.'''
-	# if 'username' in session:
-	#     return redirect(url_for('load_home'))
-	# else:
-	#     return render_template('user-login-form.html', title='Login Page')
 
 @app.route('/home/')
 @login_required
@@ -50,18 +45,21 @@ class AdminView(ModelView):
 	def inaccessible_callback(self, name, **kwargs):
 		flash("Login as administrator to view this page.")
 		return redirect(url_for('index'))
-		
+
+
 class UserView(AdminView):
     can_delete = True
     column_hide_backrefs = False
     column_list = ["id", "username", "password", "isAdmin"]
     column_searchable_list = ["id", "username"]
 
+
 class BookView(AdminView):
     can_delete = True
     column_hide_backrefs = False
-    column_list = ["id", "title", "author", "summary", "borrower", "due"]
+    column_list = ["id", "title", "author", "summary", "borrower", "due", "overdue"]
     column_searchable_list = ["id", "title", "author", "borrower"]
+
 
 admin = Admin(app, name='Library Management System Administration Page', template_mode='bootstrap3')
 admin.add_view(UserView(models.User, db.session))

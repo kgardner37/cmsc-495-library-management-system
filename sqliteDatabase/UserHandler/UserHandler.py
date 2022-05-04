@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, current_user, login_user, UserMixin, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from __main__ import app, db, login_manager
 import sqliteDatabase.BookRepositoryService.BookRepositoryService as brs
 import sqliteDatabase.Models.Models as models
+from app import app, db, login_manager
+
 
 @login_manager.user_loader
 def load_user(user_id):
