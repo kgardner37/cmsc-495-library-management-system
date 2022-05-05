@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from app import db
+from __main__ import db
 import sqliteDatabase.AccountingService.AccountingService as ac
 
 class User(UserMixin, db.Model):

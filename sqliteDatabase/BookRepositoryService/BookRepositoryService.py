@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, current_user, login_user, UserMixin, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
-from __main__ import app, db, login_manager
+from app import app, db, login_manager
 import sqliteDatabase.UserHandler.UserHandler as uh
 import sqliteDatabase.Models.Models as models
 
@@ -14,7 +14,7 @@ def checkIn(id):
     book.borrower = None
     book.due = None
     db.session.commit()
-    flash('Checked in successfully!')
+    flash('Checked in successfully!', 'info')
     return redirect(url_for('index'))
 
 @app.route('/checkOut/<id>', methods=['GET', 'POST'])
@@ -25,7 +25,7 @@ def checkOut(id):
     book.borrower = current_user.username
     book.due = datetime.now() + timedelta(days=7)
     db.session.commit()
-    flash('Checked out successfully!')
+    flash('Checked out successfully!',  'info')
     return redirect(url_for('index'))
     
 @app.route('/renew/<id>', methods=['GET', 'POST'])
@@ -35,5 +35,5 @@ def renew(id):
     book = models.Book.query.filter(models.Book.id == id).first()
     book.due = book.due + timedelta(days=7)
     db.session.commit()
-    flash('Renewed successfully!')
+    flash('Renewed successfully!', 'info')
     return redirect(url_for('index'))

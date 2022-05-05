@@ -14,18 +14,6 @@
 </head>
 <body>
 
-	<!-- Display any messages and errors passed in. -->
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				<p>{{ message }}</p>
-			{% endfor %}
-		{% endif %}
-	{% endwith %}
-	{% if error %}
-		<p>Error: {{ error }}</p>
-	{% endif %}
-
     <!-- Create condition block when the user is logging in vs register. -->
 	{% block registration_form_block_reference %}{% endblock %}
 	{% block login_form_block_reference %}{% endblock %}

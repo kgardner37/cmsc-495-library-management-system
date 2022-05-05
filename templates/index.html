@@ -8,13 +8,19 @@
 
 <body>
     {% block home_block_reference %}
-        <div class="container">
-            <h1>{{ title }}</h1>
-            <p>Paragraph</p>
+        <div class="search">
+			<form method="GET">
+				{% if query %}
+					<input type="search" class="searchbar" name="search" value={{ query }} size="40">
+				{% else %}
+					<input type="search" class="searchbar" name="search" placeholder="Search by title or author..." size="40">
+				{% endif %}
+				<button type="submit">Search</button>
+			</form>
         </div>
 
+		<h2 style="	width: 50%; margin: 0 auto;">Books</h2>
         <div class="books">
-            <h2>Books</h2>
             {% for book in books %}
             <div class="book">
                 <div class="book-title">
@@ -22,19 +28,19 @@
                 </div>
                 <div class="book-info">
                     <p class="book-image"></p>
-                    <p class="book-author">{{ book.author }}</p>
-                    <p class="book-summary">{{ book.summary }}</p>
+                    <p class="book-author">by <b>{{ book.author }}</b></p>
+                    <p class="book-summary"><i>{{ book.summary }}</i></p>
                 </div>
                 <div class="book-actions">
                     {% if book in current_user.books %}
                         {% if book.isOverDue == 0 %}
-                            <a href={{url_for('payFine', id=book.id)}}>Pay Fine</a>
+                            <a class="book-action" href={{url_for('payFine', id=book.id)}}>Pay Fine</a>
                         {% else %}
-                            <a href={{url_for('checkIn', id=book.id)}}>Check In</a>
-                            <a href={{url_for('renew', id=book.id)}}>Renew</a>
+                            <a class="book-action" href={{url_for('checkIn', id=book.id)}}>Check In</a>
+                            <a class="book-action" href={{url_for('renew', id=book.id)}}>Renew</a>
                         {% endif %}
                     {% else %}
-                        <a href={{url_for('checkOut', id=book.id)}}>Check Out</a>
+                        <a class="book-action" href={{url_for('checkOut', id=book.id)}}>Check Out</a>
                     {% endif %}
                 </div>
             </div>

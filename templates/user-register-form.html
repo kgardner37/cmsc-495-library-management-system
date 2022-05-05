@@ -8,10 +8,6 @@
     {% extends 'layout-forms.html' %}
 
     {% block registration_form_block_reference %}
-		<h1>Register</h1>
-		{% if error %}
-			<p><strong>Error:</strong> {{ error }}
-		{% endif %}
 		<div class="container">
 			<!-- Use this to see what the form will get. <form method="get"> -->
 			<form action="{{ url_for('register') }}" method="post" enctype="application/x-www-form-urlencoded">

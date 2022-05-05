@@ -30,8 +30,12 @@ def index():
 @app.route('/home/')
 @login_required
 def load_home():
-	books = models.Book.query.all()
-	return render_template('layout.html', template='index.html', title='Home - Library Management System', books=books)
+	query = request.args.get('search')
+	if query:
+		books = models.Book.query.filter(models.Book.title.contains(query) | models.Book.author.contains(query))
+	else:
+		books = models.Book.query.all()
+	return render_template('layout.html', template='index.html', title='Home', books=books, query=query)
 
 
 ## ADMIN SET-UP ##

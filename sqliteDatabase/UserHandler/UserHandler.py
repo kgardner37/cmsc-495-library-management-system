@@ -21,23 +21,25 @@ def register():
 		
 	if request.method == 'POST':
 	
-		error = None
 		username = request.form.get('username')
 		password = request.form.get('password')
 		verify = request.form.get('verify_password')
 		
 		if password != verify:
-			error = 'Mismatching passwords.'
+			flash('Mismatching passwords.', 'error')
 		else:
-			user = models.User(username=username, password=password, isAdmin=True)
-			db.session.add(user)
-			db.session.commit()
+			if models.User.query.filter(models.User.username==username).first():
+				flash('Username unavailable.', 'error')
+			else:
+				user = models.User(username=username, password=password, isAdmin=True)
+				db.session.add(user)
+				db.session.commit()
+				
+				login_user(user)
+				flash('Registration successful.', 'info')
+				return redirect(url_for('load_home'))
 			
-			login_user(user)
-			flash('Registration successful.')
-			return redirect(url_for('load_home'))
-			
-		return render_template('layout.html', template='user-register-form.html', title='Register', error=error)
+		return render_template('layout.html', template='user-register-form.html', title='Register')
 		
 	else:
 		if current_user.is_authenticated:
@@ -52,17 +54,16 @@ def login():
 		
 	if request.method == 'POST':
 	
-		error = None
 		username = request.form.get('username')
 		user = models.User.query.filter_by(username=username).first()
 		
 		if user is None or not user.check_password(request.form.get('password')):
-			error = 'Invalid credentials.'
+			flash('Invalid credentials.', 'error')
 		else:
 			login_user(user)
-			flash('Login successful.')
+			flash('Login successful.', 'info')
 			return redirect(url_for('load_home'))
-		return render_template('layout.html', template='user-login-form.html', title='Log In', error=error)
+		return render_template('layout.html', template='user-login-form.html', title='Log In')
 	else:
 		if current_user.is_authenticated:
 			return redirect(url_for('load_home'))
@@ -74,5 +75,5 @@ def logout():
 	''' Logs out the current user.
 		Redirects to the login page. '''
 	logout_user()
-	flash('Logged out.')
+	flash('Logged out.', 'info')
 	return redirect(url_for('login'))
