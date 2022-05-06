@@ -4,11 +4,11 @@
 User's Guide to Run the Project
 1.	Install the requirements 
 	Pip install Flask==2.1.2
-Pip install SQLAlchemy==1.4.36
+        Pip install SQLAlchemy==1.4.36
 	Pip install Flask-SQLAlchemy==2.5.1
 	Pip install Flask-login==0.6.1
 	Pip install Flask-admin==1.6.0
-Or python3 -r requirements.txt
+        Or python3 -r requirements.txt
 
 
 	
