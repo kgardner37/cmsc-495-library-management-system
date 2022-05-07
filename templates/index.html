@@ -25,12 +25,20 @@
             {% for book in books %}
             <div class="book">
                 <div class="book-title">
-                    <h4>{{ book.title }}</h4>
+                    <h3>{{ book.title }}</h3>
+					by <b>{{ book.author }}</b>
                 </div>
                 <div class="book-info">
-                    <p class="book-image"></p>
-                    <p class="book-author">by <b>{{ book.author }}</b></p>
-                    <p class="book-summary"><i>{{ book.summary }}</i></p>
+					<table style="border:hidden;">
+						<tr>
+							<td style="border:hidden;">
+								<p class="book-image"><img src={{ book.image_url }} alt={{ book.title }} style="width:150px;"></p>
+							</td>
+							<td>
+								<p class="book-summary"><i>{{ book.summary }}</i></p>
+							</td>
+						</tr>
+					</table>
                 </div>
                 <div class="book-actions">
                     {% if book in current_user.books %}

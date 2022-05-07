@@ -31,7 +31,7 @@ def register():
             if models.User.query.filter(models.User.username==username).first():
                 flash('Username unavailable.', 'error')
             else:
-                user = models.User(username=username, password=password, isAdmin=True)
+                user = models.User(username=username, password=password, isAdmin=False)
                 db.session.add(user)
                 db.session.commit()
                 

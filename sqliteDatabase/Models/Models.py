@@ -30,6 +30,7 @@ class Book(db.Model):
     title = db.Column(db.String)
     author = db.Column(db.String)
     summary = db.Column(db.Text)
+    image_url = db.Column(db.Text)
     borrower = db.Column(db.String, db.ForeignKey('user.username'), nullable=True)
     due = db.Column(db.DateTime, nullable=True)
     users = db.relationship('User')
