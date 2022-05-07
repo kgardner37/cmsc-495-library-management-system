@@ -9,7 +9,7 @@ import sqliteDatabase.Models.Models as models
 @app.route('/checkIn/<id>', methods=['GET', 'POST'])
 def checkIn(id):
     ''' Checks the book in.
-	Sets "borrower" to None and "due" to None. '''
+    Sets "borrower" to None and "due" to None. '''
     book = models.Book.query.filter(models.Book.id == id).first()
     book.borrower = None
     book.due = None
@@ -20,7 +20,7 @@ def checkIn(id):
 @app.route('/checkOut/<id>', methods=['GET', 'POST'])
 def checkOut(id):
     ''' Checks the book out to the current user.
-	Sets "borrower" to user's username and "due" to current date + 7 days. '''
+    Sets "borrower" to user's username and "due" to current date + 7 days. '''
     book = models.Book.query.filter(models.Book.id == id).first()
     book.borrower = current_user.username
     book.due = datetime.now() + timedelta(days=7)
@@ -31,7 +31,7 @@ def checkOut(id):
 @app.route('/renew/<id>', methods=['GET', 'POST'])
 def renew(id):
     ''' Extends the due date of the book.
-	Sets "due" to current due date + 7 days. '''
+    Sets "due" to current due date + 7 days. '''
     book = models.Book.query.filter(models.Book.id == id).first()
     book.due = book.due + timedelta(days=7)
     db.session.commit()

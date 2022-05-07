@@ -25,30 +25,30 @@ import sqliteDatabase.AccountingService.AccountingService as ac
 
 @app.route('/')
 def index():
-	return redirect(url_for('load_home'))
+    return redirect(url_for('load_home'))
 
 @app.route('/home/')
 @login_required
 def load_home():
-	query = request.args.get('search')
-	if query:
-		books = models.Book.query.filter(models.Book.title.contains(query) | models.Book.author.contains(query))
-	else:
-		books = models.Book.query.all()
-	return render_template('layout.html', template='index.html', title='Home', books=books, query=query)
+    query = request.args.get('search')
+    if query:
+        books = models.Book.query.filter(models.Book.title.contains(query) | models.Book.author.contains(query))
+    else:
+        books = models.Book.query.all()
+    return render_template('layout.html', template='index.html', title='Home', books=books, query=query)
 
 
 ## ADMIN SET-UP ##
 
 # restricts access to data to users with admin role
 class AdminView(ModelView):
-	def is_accessible(self):
-		if current_user.is_anonymous:
-			return False
-		return current_user.isAdmin
-	def inaccessible_callback(self, name, **kwargs):
-		flash("Login as administrator to view this page.")
-		return redirect(url_for('index'))
+    def is_accessible(self):
+        if current_user.is_anonymous:
+            return False
+        return current_user.isAdmin
+    def inaccessible_callback(self, name, **kwargs):
+        flash("Login as administrator to view this page.")
+        return redirect(url_for('index'))
 
 
 class UserView(AdminView):
@@ -61,16 +61,23 @@ class UserView(AdminView):
 class BookView(AdminView):
     can_delete = True
     column_hide_backrefs = False
-    column_list = ["id", "title", "author", "summary", "borrower", "due", "overdue"]
+    column_list = ["id", "title", "author", "summary", "borrower", "due"]
     column_searchable_list = ["id", "title", "author", "borrower"]
+    
+class PaymentView(AdminView):
+    can_delete = True
+    column_hide_backrefs = False
+    column_list = ["id", "payer", "book", "amount", "date"]
+    column_searchable_list = ["id", "payer", "book", "date"]
 
 
 admin = Admin(app, name='Library Management System Administration Page', template_mode='bootstrap3')
 admin.add_view(UserView(models.User, db.session))
 admin.add_view(BookView(models.Book, db.session))
+admin.add_view(PaymentView(models.Payment, db.session))
 
 #################
 
 if __name__ == '__main__':
-	db.create_all()
-	app.run(debug=True)
+    db.create_all()
+    app.run(debug=True)

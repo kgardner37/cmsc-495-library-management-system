@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from __main__ import db
+from datetime import datetime
+from app import db
 import sqliteDatabase.AccountingService.AccountingService as ac
 
 class User(UserMixin, db.Model):
@@ -10,6 +11,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String)
     isAdmin = db.Column(db.Boolean)
     books = db.relationship('Book')
+    payments = db.relationship('Payment')
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
@@ -30,20 +32,28 @@ class Book(db.Model):
     summary = db.Column(db.Text)
     borrower = db.Column(db.String, db.ForeignKey('user.username'), nullable=True)
     due = db.Column(db.DateTime, nullable=True)
+    users = db.relationship('User')
+    payments = db.relationship('Payment')
 
     def __init__(self, *args, **kwargs):
         super(Book, self).__init__(*args, **kwargs)
 
     def __repr__(self):
         return f'<Book id: {self.id}, title: {self.title}, author: {self.author}>'
+        
+    def isOverdue(self):
+        if self.due:
+            return datetime.now() > self.due
+        return False
 
 
 class Payment(db.Model):
     __tablename__ = 'payment'
     id = db.Column(db.Integer, primary_key=True)
-    amount = db.Column(db.Integer)
+    amount = db.Column(db.Integer, nullable=False)
     payer = db.Column(db.String, db.ForeignKey('user.username'), nullable=False)
     book = db.Column(db.String, db.ForeignKey('book.title'), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, *args, **kwargs):
         super(Payment, self).__init__(*args, **kwargs)

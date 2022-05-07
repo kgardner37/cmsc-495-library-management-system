@@ -33,7 +33,7 @@
                 </div>
                 <div class="book-actions">
                     {% if book in current_user.books %}
-                        {% if book.isOverDue == 0 %}
+                        {% if book.isOverdue() %}
                             <a class="book-action" href={{url_for('payFine', id=book.id)}}>Pay Fine</a>
                         {% else %}
                             <a class="book-action" href={{url_for('checkIn', id=book.id)}}>Check In</a>
