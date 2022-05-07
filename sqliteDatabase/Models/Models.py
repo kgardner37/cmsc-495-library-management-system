@@ -45,6 +45,15 @@ class Book(db.Model):
         if self.due:
             return datetime.now() > self.due
         return False
+    
+    def checkFine(self):
+        ''' Checks amount due on a book. '''
+        totalPaid = 0
+        amountsPaid = Payment.query.filter(Payment.book == self.title and Payment.payer == self.borrower and Payment.date > self.due)
+        for payment in amountsPaid:
+            totalPaid += payment.amount
+        delta = datetime.now() - self.due
+        return ((delta.days // 7) * 5) - totalPaid # $5 per week after the due date
 
 
 class Payment(db.Model):

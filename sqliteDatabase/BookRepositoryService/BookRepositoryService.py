@@ -21,6 +21,9 @@ def checkIn(id):
 def checkOut(id):
     ''' Checks the book out to the current user.
     Sets "borrower" to user's username and "due" to current date + 7 days. '''
+    if models.Book.query.filter(models.Book.borrower == current_user.username).count() > 2:
+        flash('You may not have more than three books checked out at once!', 'error')
+        return redirect(url_for('index'))
     book = models.Book.query.filter(models.Book.id == id).first()
     book.borrower = current_user.username
     book.due = datetime.now() + timedelta(days=7)

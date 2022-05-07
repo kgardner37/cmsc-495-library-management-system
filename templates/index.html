@@ -8,8 +8,11 @@
 
 <body>
     {% block home_block_reference %}
+		<h2 style="	width: 50%; margin: 0 auto;">Books</h2>
         <div class="search">
 			<form method="GET">
+				<input type="checkbox" name="show_available" {{ available }}><label for="show_available">Display only books available for check out</label><br>
+				<input type="checkbox" name="show_mine" {{ mine }}><label for="show_mine">Display only my checked out books</label><br>
 				{% if query %}
 					<input type="search" class="searchbar" name="search" value={{ query }} size="40">
 				{% else %}
@@ -18,8 +21,6 @@
 				<button type="submit">Search</button>
 			</form>
         </div>
-
-		<h2 style="	width: 50%; margin: 0 auto;">Books</h2>
         <div class="books">
             {% for book in books %}
             <div class="book">
@@ -34,13 +35,21 @@
                 <div class="book-actions">
                     {% if book in current_user.books %}
                         {% if book.isOverdue() %}
-                            <a class="book-action" href={{url_for('payFine', id=book.id)}}>Pay Fine</a>
+                            <p><a class="book-action" href={{url_for('payFine', id=book.id)}}>Pay Fine</a>
+							Pay the overdue fine before checking in or renewing. Amount due: ${{ book.checkFine() }}.00.</p>
                         {% else %}
-                            <a class="book-action" href={{url_for('checkIn', id=book.id)}}>Check In</a>
+                            <p><a class="book-action" href={{url_for('checkIn', id=book.id)}}>Check In</a>
                             <a class="book-action" href={{url_for('renew', id=book.id)}}>Renew</a>
+							Due: {{ book.due.strftime("%B %d, %Y") }}</p>
                         {% endif %}
                     {% else %}
-                        <a class="book-action" href={{url_for('checkOut', id=book.id)}}>Check Out</a>
+						{% if book.borrower %}
+							<p><a class="book-action" href={{url_for('checkOut', id=book.id)}} style="pointer-events: none !important; cursor: default; color:Gray;">Check Out</a>
+							Unavailable.</p>
+						{% else %}
+							<p><a class="book-action" href={{url_for('checkOut', id=book.id)}}>Check Out</a>
+							Available.</p>
+						{% endif %}
                     {% endif %}
                 </div>
             </div>

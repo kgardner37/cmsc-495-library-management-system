@@ -31,11 +31,31 @@ def index():
 @login_required
 def load_home():
     query = request.args.get('search')
+    available = request.args.get('show_available')
+    mine = request.args.get('show_mine')
     if query:
-        books = models.Book.query.filter(models.Book.title.contains(query) | models.Book.author.contains(query))
+        if available and not mine:
+            books = models.Book.query.filter((models.Book.title.contains(query) | models.Book.author.contains(query)) & models.Book.due == None)
+        if not available and mine:
+            books = models.Book.query.filter((models.Book.title.contains(query) | models.Book.author.contains(query)) & models.Book.borrower == current_user.username)
+        if available and mine:
+            books = []
+        if not available and not mine:
+            books = models.Book.query.filter(models.Book.title.contains(query) | models.Book.author.contains(query))
     else:
-        books = models.Book.query.all()
-    return render_template('layout.html', template='index.html', title='Home', books=books, query=query)
+        if available and not mine:
+            books = models.Book.query.filter(models.Book.due == None)
+        if not available and mine:
+            books = models.Book.query.filter(models.Book.borrower == current_user.username)
+        if available and mine:
+            books = []
+        if not available and not mine:
+            books = models.Book.query.all()
+    if available:
+        available = 'checked'
+    if mine:
+        mine = 'checked'
+    return render_template('layout.html', template='index.html', title='Home', books=books, query=query, available=available, mine=mine)
 
 
 ## ADMIN SET-UP ##

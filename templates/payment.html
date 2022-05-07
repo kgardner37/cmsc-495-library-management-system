@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+</head>
+<body>
+    {% block payment_block_reference %}
+		<div class="container">
+			<!-- Use this to see what the form will get. <form method="get"> -->
+			<form action="{{ url_for('payFine', id=book.id) }}" method="post" enctype="application/x-www-form-urlencoded">
+				<div>
+					<p><label>Book title:</label> {{ book.title }}<br>
+					<label>Date due:</label> {{ book.due.strftime("%B %d, %Y") }}<br>
+					<label><b>Amount Due:</b></label> ${{ book.checkFine() }}.00</p>
+				</div>
+				<div>
+					<label for="signature">Sign Name</label>
+					<input type="text" name="signature" required>
+				</div>
+				<div>
+					<input type="submit" class="submit" value="Approve Payment">
+				</div>
+			</form>
+		</div>
+    {% endblock %}
+</body>
+</html>
