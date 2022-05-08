@@ -10,8 +10,8 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String)
     password = db.Column(db.String)
     isAdmin = db.Column(db.Boolean)
-    books = db.relationship('Book')
-    payments = db.relationship('Payment')
+    books = db.relationship('Book', viewonly=True)
+    payments = db.relationship('Payment', viewonly=True)
 
     def __init__(self, *args, **kwargs):
         super(User, self).__init__(*args, **kwargs)
